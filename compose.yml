@@ -1,0 +1,42 @@
+name: 'study-kotlin'
+
+services:
+  db:
+    container_name: study-kotlin-db-container
+    hostname: study-kotlin-db-server
+    image: study-kotlin/db:dev
+    build:
+      context: .
+      dockerfile: ./infra/docker/mysql/Dockerfile
+      cache_from:
+        - study-kotlin/db:cache
+    ports:
+      - '13316:3306'
+    volumes:
+      - mysql-data-volume:/var/lib/mysql
+      - ./infra/docker/mysql/init:/docker-entrypoint-initdb.d
+    environment:
+      - MYSQL_DATABASE=${DB_NAME:-init}
+      - MYSQL_USER=${DB_USER:-test}
+      - MYSQL_PASSWORD=${DB_PASS:-test}
+      - MYSQL_ROOT_PASSWORD=${DB_PASS:-secret}
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - container-link
+
+networks:
+  default:
+    name: study-kotlin
+    external: true
+  container-link:
+    name: docker.internal
+
+volumes:
+  mysql-data-volume:
+    name: study-kotlin-db-data
+    driver: local
