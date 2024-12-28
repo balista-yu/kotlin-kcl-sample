@@ -10,6 +10,7 @@ services:
       dockerfile: ./infra/docker/backend/Dockerfile
       cache_from:
         - study-kotlin/backend:cache
+      target: dev
     depends_on:
       - db
     environment:
@@ -26,6 +27,8 @@ services:
       - default
     ports:
       - '8080:8080'
+    volumes:
+      - ./backend/src/main:/app/src/main
 
   db:
     container_name: study-kotlin-db-container

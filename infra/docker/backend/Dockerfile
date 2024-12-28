@@ -11,7 +11,23 @@ RUN gradle build -x test --parallel --no-daemon || return 0
 COPY /backend/src /app/src
 RUN gradle build -x test --no-daemon
 
-FROM eclipse-temurin:21-jdk
+FROM eclipse-temurin:21-jdk AS dev
+
+WORKDIR /app
+
+COPY /backend /app
+
+EXPOSE 8080
+
+RUN chmod +x gradlew
+RUN chmod +x start.sh
+
+# -x testでビルド中のテストをskip
+RUN ./gradlew getDependencies -x test
+
+CMD ["sh", "start.sh"]
+
+FROM eclipse-temurin:21-jdk AS prod
 
 RUN useradd -m -u 1001 spring
 
