@@ -1,6 +1,32 @@
 name: 'study-kotlin'
 
 services:
+  backend:
+    container_name: study-kotlin-backend-container
+    hostname: study-kotlin-backend-server
+    image: study-kotlin/backend:dev
+    build:
+      context: .
+      dockerfile: ./infra/docker/backend/Dockerfile
+      cache_from:
+        - study-kotlin/backend:cache
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=${DATABASE_URL:-jdbc:mysql://db:3306/kotlin}
+      - APP_DATABASE_USER=${APP_DATABASE_USER:-test}
+      - APP_DATABASE_PASSWORD=${APP_DATABASE_PASSWORD:-test}
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - default
+    ports:
+      - '8080:8080'
+
   db:
     container_name: study-kotlin-db-container
     hostname: study-kotlin-db-server
@@ -16,7 +42,7 @@ services:
       - mysql-data-volume:/var/lib/mysql
       - ./infra/docker/mysql/init:/docker-entrypoint-initdb.d
     environment:
-      - MYSQL_DATABASE=${DB_NAME:-init}
+      - MYSQL_DATABASE=${DB_NAME:-kotlin}
       - MYSQL_USER=${DB_USER:-test}
       - MYSQL_PASSWORD=${DB_PASS:-test}
       - MYSQL_ROOT_PASSWORD=${DB_PASS:-secret}
@@ -27,14 +53,11 @@ services:
       retries: 5
       start_period: 30s
     networks:
-      - container-link
+      - default
 
 networks:
   default:
     name: study-kotlin
-    external: true
-  container-link:
-    name: docker.internal
 
 volumes:
   mysql-data-volume:

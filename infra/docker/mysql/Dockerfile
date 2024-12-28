@@ -1,4 +1,4 @@
-FROM --platform=linux/x86_64 mysql:8.2
+FROM mysql:8.2
 
 ENV TZ=Asia/Tokyo
 
