@@ -8,15 +8,18 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
 import java.net.URI
 
 @Component
-class CloudWatchClientFactory(private val cloudWatchConfig: CloudWatchConfig) {
+class CloudWatchClientFactory(
+    private val awsConfig: AwsConfig,
+    private val cloudWatchConfig: CloudWatchConfig
+) {
     fun create(): CloudWatchAsyncClient {
         val builder = CloudWatchAsyncClient.builder()
-            .region(Region.of(cloudWatchConfig.region))
+            .region(Region.of(awsConfig.region))
             .credentialsProvider(
                 StaticCredentialsProvider.create(
                     AwsBasicCredentials.create(
-                        cloudWatchConfig.accessKey,
-                        cloudWatchConfig.secretKey
+                        awsConfig.accessKey,
+                        awsConfig.secretKey
                     )
                 )
             )

@@ -4,7 +4,8 @@ Study kotlin
 
 ## Overview
 
-This is kotlin app sample.
+- KCL(Kinesis Client Library)で Kotlin を使用したコンシューマーアプリのサンプル
+- Kinesis Data Streams を使用して DynamoDB の変更をキャプチャ（CDC）し、RDSに変更データを登録
 
 ## Getting Start
 

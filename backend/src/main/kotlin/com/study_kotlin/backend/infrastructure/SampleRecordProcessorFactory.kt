@@ -1,6 +1,6 @@
 package com.study_kotlin.backend.infrastructure
 
-import com.study_kotlin.backend.infrastructure.aws.DbConfig
+import com.study_kotlin.backend.infrastructure.db.DbConfig
 import software.amazon.kinesis.processor.ShardRecordProcessor
 import software.amazon.kinesis.processor.ShardRecordProcessorFactory
 

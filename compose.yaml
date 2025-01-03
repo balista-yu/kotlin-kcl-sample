@@ -14,6 +14,8 @@ services:
     depends_on:
       - postgres
     restart: always
+    env_file:
+      - app-local.env
     logging:
       driver: "json-file"
       options:

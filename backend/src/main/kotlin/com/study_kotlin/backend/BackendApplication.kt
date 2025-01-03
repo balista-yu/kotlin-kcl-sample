@@ -4,7 +4,7 @@ import com.study_kotlin.backend.infrastructure.SampleRecordProcessorFactory
 import com.study_kotlin.backend.infrastructure.aws.KinesisClientFactory
 import com.study_kotlin.backend.infrastructure.aws.DynamoDbClientFactory
 import com.study_kotlin.backend.infrastructure.aws.CloudWatchClientFactory
-import com.study_kotlin.backend.infrastructure.aws.DbConfig
+import com.study_kotlin.backend.infrastructure.db.DbConfig
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

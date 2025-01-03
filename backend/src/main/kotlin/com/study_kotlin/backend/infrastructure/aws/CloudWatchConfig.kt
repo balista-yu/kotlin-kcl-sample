@@ -4,8 +4,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties("cloudwatch")
 data class CloudWatchConfig (
-    val endpoint: String,
-    val region: String,
-    val accessKey: String,
-    val secretKey: String,
+    val endpoint: String
 )

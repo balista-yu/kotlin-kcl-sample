@@ -8,15 +8,18 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
 import java.net.URI
 
 @Component
-class KinesisClientFactory(private val kinesisConfig: KinesisConfig) {
+class KinesisClientFactory(
+    private val awsConfig: AwsConfig,
+    private val kinesisConfig: KinesisConfig
+) {
     fun create(): KinesisAsyncClient {
         val builder = KinesisAsyncClient.builder()
-            .region(Region.of(kinesisConfig.region))
+            .region(Region.of(awsConfig.region))
             .credentialsProvider(
                 StaticCredentialsProvider.create(
                     AwsBasicCredentials.create(
-                        kinesisConfig.accessKey,
-                        kinesisConfig.secretKey
+                        awsConfig.accessKey,
+                        awsConfig.secretKey
                     )
                 )
             )
