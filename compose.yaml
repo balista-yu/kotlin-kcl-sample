@@ -15,9 +15,12 @@ services:
       - mysql
       - postgres
     environment:
-      - DATABASE_URL=${DATABASE_URL:-jdbc:mysql://db:3306/kotlin}
-      - APP_DATABASE_USER=${APP_DATABASE_USER:-test}
-      - APP_DATABASE_PASSWORD=${APP_DATABASE_PASSWORD:-test}
+      - MYSQL_DATABASE_URL=${MYSQL_DATABASE_URL:-jdbc:mysql://mysql:3306/kotlin}
+      - MYSQL_DATABASE_USER=${MYSQL_DATABASE_USER:-test}
+      - MYSQL_DATABASE_PASSWORD=${MYSQL_DATABASE_PASSWORD:-test}
+      - POSTGRES_DATABASE_URL=${POSTGRES_DATABASE_URL:-jdbc:postgresql://postgres:5432/kotlin2}
+      - POSTGRES_DATABASE_USER=${POSTGRES_DATABASE_USER:-test}
+      - POSTGRES_DATABASE_PASSWORD=${POSTGRES_DATABASE_PASSWORD:-test}
     restart: always
     logging:
       driver: "json-file"
@@ -29,7 +32,7 @@ services:
     ports:
       - '8080:8080'
     volumes:
-      - ./backend/src/main:/app/src/main
+      - ./backend:/app
 
   mysql:
     container_name: study-kotlin-mysql-container
@@ -75,6 +78,7 @@ services:
       - POSTGRES_DB=${POSTGRES_DB_NAME:-kotlin2}
       - POSTGRES_USER=${POSTGRES_DB_USER:-test}
       - POSTGRES_PASSWORD=${POSTGRES_DB_PASS:-test}
+      - TZ=Asia/Tokyo
     volumes:
       - postgres-data-volume:/var/lib/postgresql/data
       - ./infra/docker/postgres/init:/docker-entrypoint-initdb.d/

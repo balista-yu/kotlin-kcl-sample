@@ -22,12 +22,20 @@ repositories {
 dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("org.flywaydb:flyway-core")
-    implementation("org.flywaydb:flyway-mysql")
+	implementation("com.amazonaws:amazon-kinesis-client:1.15.2")
+	implementation("software.amazon.kinesis:amazon-kinesis-client:3.0.1")
+	implementation("software.amazon.awssdk:kinesis:2.29.43")
+	implementation("software.amazon.awssdk:dynamodb:2.29.43")
+	implementation("software.amazon.awssdk:cloudwatch:2.29.43")
+	implementation("software.amazon.awssdk:auth:2.29.43")
+	implementation("software.amazon.awssdk:core:2.29.43")
+	implementation("software.amazon.awssdk:regions:2.29.43")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+	implementation("org.slf4j:slf4j-api:2.1.0-alpha1")
+	implementation("io.github.cdimascio:dotenv-java:3.1.0")
     runtimeOnly("com.mysql:mysql-connector-j")
+	runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
@@ -43,12 +51,6 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         freeCompilerArgs = listOf("-Xjsr305=strict")
         jvmTarget = "21"
     }
-}
-
-allOpen {
-    annotation("jakarta.persistence.Entity")
-    annotation("jakarta.persistence.MappedSuperclass")
-    annotation("jakarta.persistence.Embeddable")
 }
 
 tasks.withType<Test> {

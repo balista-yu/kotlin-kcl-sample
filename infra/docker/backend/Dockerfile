@@ -6,10 +6,10 @@ COPY /backend/build.gradle.kts /app/
 COPY /backend/settings.gradle.kts /app/
 COPY /backend/gradle /app/gradle
 
-RUN gradle build -x test --parallel --no-daemon || return 0
+RUN gradle clean build -x test --parallel --no-daemon || return 0
 
 COPY /backend/src /app/src
-RUN gradle build -x test --no-daemon
+RUN gradle cleann build -x test --no-daemon
 
 FROM eclipse-temurin:21-jdk AS dev
 
@@ -23,7 +23,7 @@ RUN chmod +x gradlew
 RUN chmod +x start.sh
 
 # -x testでビルド中のテストをskip
-RUN ./gradlew getDependencies -x test
+RUN ./gradlew clean getDependencies -x test --stacktrace
 
 CMD ["sh", "start.sh"]
 
