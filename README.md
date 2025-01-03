@@ -1,6 +1,6 @@
 # Name
 
-Study kotlin 
+Kotlin KCL Sample
 
 ## Overview
 
@@ -12,12 +12,12 @@ Study kotlin
 1. Clone the repository
 
 ```
-$ git clone https://github.com/balista-yu/study-kotlin.git
+$ git clone https://github.com/balista-yu/kotlin-kcl-sample.git
 ```
 
 2. Run docker compose
 ```
-$ cd study-kotlin
+$ cd kotlin-kcl-sample
 $ task up
 ```
 
