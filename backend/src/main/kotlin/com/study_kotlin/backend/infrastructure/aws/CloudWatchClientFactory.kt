@@ -1,0 +1,30 @@
+package com.study_kotlin.backend.infrastructure.aws
+
+import org.springframework.stereotype.Component
+import software.amazon.awssdk.regions.Region
+import software.amazon.awssdk.services.cloudwatch.CloudWatchAsyncClient
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
+import java.net.URI
+
+@Component
+class CloudWatchClientFactory(private val cloudWatchConfig: CloudWatchConfig) {
+    fun create(): CloudWatchAsyncClient {
+        val builder = CloudWatchAsyncClient.builder()
+            .region(Region.of(cloudWatchConfig.region))
+            .credentialsProvider(
+                StaticCredentialsProvider.create(
+                    AwsBasicCredentials.create(
+                        cloudWatchConfig.accessKey,
+                        cloudWatchConfig.secretKey
+                    )
+                )
+            )
+
+        cloudWatchConfig.endpoint.let {
+            builder.endpointOverride(URI.create(it))
+        }
+
+        return builder.build()
+    }
+}
