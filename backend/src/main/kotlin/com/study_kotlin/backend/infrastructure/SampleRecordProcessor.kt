@@ -1,6 +1,6 @@
 package com.study_kotlin.backend.infrastructure
 
-import com.study_kotlin.backend.infrastructure.aws.DbConfig
+import com.study_kotlin.backend.infrastructure.db.DbConfig
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC

@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${POSTGRES_DATABASE_URL:jdbc:postgresql://study-kotlin-postgres-container:5432/kotlin2}
-    username: ${POSTGRES_DATABASE_USER:test}
-    password: ${POSTGRES_DATABASE_PASSWORD:test}
+    url: ${POSTGRES_DATABASE_URL}
+    username: ${POSTGRES_DATABASE_USER}
+    password: ${POSTGRES_DATABASE_PASSWORD}
   jpa:
     show-sql: true
     hibernate:
@@ -20,28 +20,18 @@ spring:
       enabled: true
     livereload:
       enabled: true
-#TODO: .envの環境変数が読み込まれるようにする
 postgres:
-  url: ${POSTGRES_DATABASE_URL:jdbc:postgresql://study-kotlin-postgres-container:5432/kotlin2}
-  username: ${POSTGRES_DATABASE_USER:test}
-  password: ${POSTGRES_DATABASE_PASSWORD:test}
+  url: ${POSTGRES_DATABASE_URL}
+  username: ${POSTGRES_DATABASE_USER}
+  password: ${POSTGRES_DATABASE_PASSWORD}
 aws:
-  accessKey: ${AWS_ACCESS_KEY:test}
-  secretKey: ${AWS_ACCESS_SECRET_KEY:test}
-  region: ${AWS_REGION:ap-northeast-1}
+  accessKey: ${AWS_ACCESS_KEY}
+  secretKey: ${AWS_ACCESS_SECRET_KEY}
+  region: ${AWS_REGION}
 kinesis:
-  endpoint: ${AWS_KINESIS_DEV_ENDPOINT:http://study-kotlin-localstack-container:4566}
-  region: ${AWS_KINESIS_REGION:ap-northeast-1}
-  streamName: ${AWS_KINESIS_STREAM_NAME:study-kotlin-stream}
-  accessKey: ${AWS_ACCESS_KEY:test}
-  secretKey: ${AWS_ACCESS_SECRET_KEY:test}
+  endpoint: ${AWS_KINESIS_DEV_ENDPOINT}
+  streamName: ${AWS_KINESIS_STREAM_NAME}
 dynamodb:
-  endpoint: ${AWS_DYNAMO_DB_DEV_ENDPOINT:http://study-kotlin-localstack-container:4566}
-  region: ${AWS_DYNAMO_DB_REGION:ap-northeast-1}
-  accessKey: ${AWS_ACCESS_KEY:test}
-  secretKey: ${AWS_ACCESS_SECRET_KEY:test}
+  endpoint: ${AWS_DYNAMO_DB_DEV_ENDPOINT}
 cloudwatch:
-  endpoint: ${AWS_CLOUD_WATCH_DEV_ENDPOINT:http://study-kotlin-localstack-container:4566}
-  region: ${AWS_CLOUD_WATCH_REGION:ap-northeast-1}
-  accessKey: ${AWS_ACCESS_KEY:test}
-  secretKey: ${AWS_ACCESS_SECRET_KEY:test}
+  endpoint: ${AWS_CLOUD_WATCH_DEV_ENDPOINT}

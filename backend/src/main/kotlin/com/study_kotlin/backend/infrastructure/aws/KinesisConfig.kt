@@ -5,8 +5,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 @ConfigurationProperties("kinesis")
 data class KinesisConfig (
     val endpoint: String,
-    val region: String,
-    val streamName: String,
-    val accessKey: String,
-    val secretKey: String
+    val streamName: String
 )

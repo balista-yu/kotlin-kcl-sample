@@ -12,16 +12,10 @@ services:
         - study-kotlin/backend:cache
       target: dev
     depends_on:
-      - mysql
       - postgres
-    environment:
-      - MYSQL_DATABASE_URL=${MYSQL_DATABASE_URL:-jdbc:mysql://mysql:3306/kotlin}
-      - MYSQL_DATABASE_USER=${MYSQL_DATABASE_USER:-test}
-      - MYSQL_DATABASE_PASSWORD=${MYSQL_DATABASE_PASSWORD:-test}
-      - POSTGRES_DATABASE_URL=${POSTGRES_DATABASE_URL:-jdbc:postgresql://postgres:5432/kotlin2}
-      - POSTGRES_DATABASE_USER=${POSTGRES_DATABASE_USER:-test}
-      - POSTGRES_DATABASE_PASSWORD=${POSTGRES_DATABASE_PASSWORD:-test}
     restart: always
+    env_file:
+      - app-local.env
     logging:
       driver: "json-file"
       options:
@@ -33,34 +27,6 @@ services:
       - '8080:8080'
     volumes:
       - ./backend:/app
-
-  mysql:
-    container_name: study-kotlin-mysql-container
-    hostname: study-kotlin-mysql-server
-    image: study-kotlin/mysql:dev
-    build:
-      context: .
-      dockerfile: ./infra/docker/mysql/Dockerfile
-      cache_from:
-        - study-kotlin/mysql:cache
-    ports:
-      - '13316:3306'
-    volumes:
-      - mysql-data-volume:/var/lib/mysql
-      - ./infra/docker/mysql/init:/docker-entrypoint-initdb.d
-    environment:
-      - MYSQL_DATABASE=${MYSQL_DB_NAME:-kotlin}
-      - MYSQL_USER=${MYSQL_DB_USER:-test}
-      - MYSQL_PASSWORD=${MYSQL_DB_PASS:-test}
-      - MYSQL_ROOT_PASSWORD=${MYSQL_DB_PASS:-secret}
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
-    networks:
-      - default
 
   postgres:
     container_name: study-kotlin-postgres-container
@@ -75,7 +41,7 @@ services:
     ports:
       - '15434:5432'
     environment:
-      - POSTGRES_DB=${POSTGRES_DB_NAME:-kotlin2}
+      - POSTGRES_DB=${POSTGRES_DB_NAME:-study_kotlin}
       - POSTGRES_USER=${POSTGRES_DB_USER:-test}
       - POSTGRES_PASSWORD=${POSTGRES_DB_PASS:-test}
       - TZ=Asia/Tokyo
@@ -125,9 +91,6 @@ networks:
     name: study-kotlin
 
 volumes:
-  mysql-data-volume:
-    name: study-kotlin-mysql-data
-    driver: local
   postgres-data-volume:
     name: study-kotlin-postgres-data
     driver: local

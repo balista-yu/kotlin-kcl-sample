@@ -1,4 +1,4 @@
-package com.study_kotlin.backend.infrastructure.aws
+package com.study_kotlin.backend.infrastructure.db
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 

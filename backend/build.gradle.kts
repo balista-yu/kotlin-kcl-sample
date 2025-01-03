@@ -33,7 +33,6 @@ dependencies {
 	implementation("software.amazon.awssdk:regions:2.29.43")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.slf4j:slf4j-api:2.1.0-alpha1")
-	implementation("io.github.cdimascio:dotenv-java:3.1.0")
     runtimeOnly("com.mysql:mysql-connector-j")
 	runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")

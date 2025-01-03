@@ -4,7 +4,7 @@ import com.study_kotlin.backend.infrastructure.SampleRecordProcessorFactory
 import com.study_kotlin.backend.infrastructure.aws.KinesisClientFactory
 import com.study_kotlin.backend.infrastructure.aws.DynamoDbClientFactory
 import com.study_kotlin.backend.infrastructure.aws.CloudWatchClientFactory
-import com.study_kotlin.backend.infrastructure.aws.DbConfig
+import com.study_kotlin.backend.infrastructure.db.DbConfig
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -15,6 +15,7 @@ import software.amazon.kinesis.common.ConfigsBuilder
 import software.amazon.kinesis.coordinator.Scheduler
 import java.util.UUID
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan
+import software.amazon.kinesis.leases.LeaseManagementConfig
 
 @SpringBootApplication
 @ConfigurationPropertiesScan
@@ -31,6 +32,7 @@ class BackendApplication @Autowired constructor(
         val dynamoDbAsyncClient: DynamoDbAsyncClient = dynamoDbClientFactory.create()
         val cloudWatchClient: CloudWatchAsyncClient = cloudWatchClientFactory.create()
         val streamName = "study-kotlin-stream" // ストリーム名
+        val workerIdentifier = UUID.randomUUID().toString()
 
         // データ処理のための設定を作成
         val configsBuilder = ConfigsBuilder(
@@ -39,15 +41,28 @@ class BackendApplication @Autowired constructor(
             kinesisClient,
             dynamoDbAsyncClient,
             cloudWatchClient,
-            UUID.randomUUID().toString(),
+            workerIdentifier,
             SampleRecordProcessorFactory(dbConfig)
         )
+
+        // KCLがローカル環境（localstack）でEC2メタデータサービスにアクセスしようとしているが、必要ないため無効化
+        val leaseManagementConfig = LeaseManagementConfig(
+            streamName,
+            streamName,
+            dynamoDbAsyncClient,
+            kinesisClient,
+            workerIdentifier
+        ).workerUtilizationAwareAssignmentConfig(
+            LeaseManagementConfig.WorkerUtilizationAwareAssignmentConfig()
+            .disableWorkerMetrics(true).workerMetricsTableConfig(
+            LeaseManagementConfig.WorkerMetricsTableConfig(streamName)
+        ))
 
         // スケジューラの設定と開始
         val scheduler = Scheduler(
             configsBuilder.checkpointConfig(),
             configsBuilder.coordinatorConfig(),
-            configsBuilder.leaseManagementConfig(),
+            leaseManagementConfig,
             configsBuilder.lifecycleConfig(),
             configsBuilder.metricsConfig(),
             configsBuilder.processorConfig(),
