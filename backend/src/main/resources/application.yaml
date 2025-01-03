@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${POSTGRES_DATABASE_URL:jdbc:postgresql://study-kotlin-postgres-container:5432/kotlin2}
+    url: ${POSTGRES_DATABASE_URL:jdbc:postgresql://study-kotlin-postgres-container:5432/study_kotlin}
     username: ${POSTGRES_DATABASE_USER:test}
     password: ${POSTGRES_DATABASE_PASSWORD:test}
   jpa:
@@ -22,7 +22,7 @@ spring:
       enabled: true
 #TODO: .envの環境変数が読み込まれるようにする
 postgres:
-  url: ${POSTGRES_DATABASE_URL:jdbc:postgresql://study-kotlin-postgres-container:5432/kotlin2}
+  url: ${POSTGRES_DATABASE_URL:jdbc:postgresql://study-kotlin-postgres-container:5432/study_kotlin}
   username: ${POSTGRES_DATABASE_USER:test}
   password: ${POSTGRES_DATABASE_PASSWORD:test}
 aws:
