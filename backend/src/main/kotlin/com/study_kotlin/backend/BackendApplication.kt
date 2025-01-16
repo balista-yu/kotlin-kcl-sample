@@ -6,6 +6,7 @@ import com.study_kotlin.backend.infrastructure.aws.DynamoDbClientFactory
 import com.study_kotlin.backend.infrastructure.aws.CloudWatchClientFactory
 import com.study_kotlin.backend.infrastructure.db.DbConfig
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import software.amazon.awssdk.services.cloudwatch.CloudWatchAsyncClient
@@ -16,6 +17,7 @@ import software.amazon.kinesis.coordinator.Scheduler
 import java.util.UUID
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan
 import software.amazon.kinesis.leases.LeaseManagementConfig
+import software.amazon.kinesis.retrieval.polling.PollingConfig
 
 @SpringBootApplication
 @ConfigurationPropertiesScan
@@ -25,13 +27,14 @@ class BackendApplication @Autowired constructor(
     private val cloudWatchClientFactory: CloudWatchClientFactory,
     private val dbConfig: DbConfig
 ) {
+    @Value("\${kinesis.streamName}")
+    val streamName = ""
 
     // Kinesisデータの処理メソッド
     fun run() {
         val kinesisClient: KinesisAsyncClient = kinesisClientFactory.create()
         val dynamoDbAsyncClient: DynamoDbAsyncClient = dynamoDbClientFactory.create()
         val cloudWatchClient: CloudWatchAsyncClient = cloudWatchClientFactory.create()
-        val streamName = "study-kotlin-stream" // ストリーム名
         val workerIdentifier = UUID.randomUUID().toString()
 
         // データ処理のための設定を作成
@@ -66,10 +69,9 @@ class BackendApplication @Autowired constructor(
             configsBuilder.lifecycleConfig(),
             configsBuilder.metricsConfig(),
             configsBuilder.processorConfig(),
-            configsBuilder.retrievalConfig()
+            configsBuilder.retrievalConfig().retrievalSpecificConfig(PollingConfig(streamName, kinesisClient)) // 拡張ファンアウトは使用しない
         )
 
-        // 非同期に処理を開始
         val schedulerThread = Thread(scheduler)
         schedulerThread.isDaemon = true
         schedulerThread.start()

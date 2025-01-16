@@ -64,7 +64,7 @@ class SampleRecordProcessor (private val dbConfig: DbConfig) : ShardRecordProces
 
         try {
             connection = DriverManager.getConnection(dbConfig.url, dbConfig.username, dbConfig.password)
-            val sql = "INSERT INTO kinesis_data (partition_key, sequence_number, data) VALUES (?, ?, ?)"
+            val sql = "INSERT INTO kinesis_animals_data (partition_key, sequence_number, data) VALUES (?, ?, ?)"
             preparedStatement = connection.prepareStatement(sql)
             preparedStatement.setString(1, partitionKey)
             preparedStatement.setString(2, sequenceNumber)
