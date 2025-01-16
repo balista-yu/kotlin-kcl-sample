@@ -23,5 +23,6 @@ $ task up
 
 3. DynamoDB Insert Record with localstack
 ```
-# awslocal dynamodb put-item --table-name study_kotlin --item '{"id": {"S": "hoge"}}'
+# awslocal dynamodb put-item --table-name animals --item '{"id": {"S": "hoge"}}'
+# awslocal dynamodb put-item --table-name foods --item '{"id": {"S": "fuga"}}'
 ```
