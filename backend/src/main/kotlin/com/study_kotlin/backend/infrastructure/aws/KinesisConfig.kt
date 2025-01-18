@@ -5,5 +5,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 @ConfigurationProperties("kinesis")
 data class KinesisConfig (
     val endpoint: String,
-    val streamName: String
+    val animalsStreamName: String,
+    val foodsStreamName: String
 )
