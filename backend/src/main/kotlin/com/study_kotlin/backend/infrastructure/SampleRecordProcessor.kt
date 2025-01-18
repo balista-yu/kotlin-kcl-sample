@@ -1,5 +1,6 @@
 package com.study_kotlin.backend.infrastructure
 
+import com.fasterxml.jackson.module.kotlin.*
 import com.study_kotlin.backend.infrastructure.db.DbConfig
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -61,10 +62,13 @@ class SampleRecordProcessor (private val dbConfig: DbConfig) : ShardRecordProces
     private fun saveToDatabase(partitionKey: String, sequenceNumber: String, data: String) {
         var connection: Connection? = null
         var preparedStatement: PreparedStatement? = null
+        val objectMapper = jacksonObjectMapper()
+        val dynamoDbEvent: DynamoDbEvent = objectMapper.readValue(data)
+        val isAnimal = dynamoDbEvent.tableName == "animals"
 
         try {
             connection = DriverManager.getConnection(dbConfig.url, dbConfig.username, dbConfig.password)
-            val sql = "INSERT INTO kinesis_data (partition_key, sequence_number, data) VALUES (?, ?, ?)"
+            val sql = if (isAnimal) "INSERT INTO kinesis_animals_data (partition_key, sequence_number, data) VALUES (?, ?, ?)" else "INSERT INTO kinesis_foods_data (partition_key, sequence_number, data) VALUES (?, ?, ?)"
             preparedStatement = connection.prepareStatement(sql)
             preparedStatement.setString(1, partitionKey)
             preparedStatement.setString(2, sequenceNumber)

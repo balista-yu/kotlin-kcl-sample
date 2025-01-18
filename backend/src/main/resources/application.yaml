@@ -30,7 +30,8 @@ aws:
   region: ${AWS_REGION}
 kinesis:
   endpoint: ${AWS_KINESIS_DEV_ENDPOINT}
-  streamName: ${AWS_KINESIS_STREAM_NAME}
+  animalsStreamName: ${AWS_KINESIS_ANIMALS_STREAM_NAME}
+  foodsStreamName: ${AWS_KINESIS_FOODS_STREAM_NAME}
 dynamodb:
   endpoint: ${AWS_DYNAMO_DB_DEV_ENDPOINT}
 cloudwatch:

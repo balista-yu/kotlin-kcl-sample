@@ -4,6 +4,7 @@ import com.study_kotlin.backend.infrastructure.SampleRecordProcessorFactory
 import com.study_kotlin.backend.infrastructure.aws.KinesisClientFactory
 import com.study_kotlin.backend.infrastructure.aws.DynamoDbClientFactory
 import com.study_kotlin.backend.infrastructure.aws.CloudWatchClientFactory
+import com.study_kotlin.backend.infrastructure.aws.KinesisConfig
 import com.study_kotlin.backend.infrastructure.db.DbConfig
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -23,21 +24,24 @@ class BackendApplication @Autowired constructor(
     private val kinesisClientFactory: KinesisClientFactory,
     private val dynamoDbClientFactory: DynamoDbClientFactory,
     private val cloudWatchClientFactory: CloudWatchClientFactory,
-    private val dbConfig: DbConfig
+    private val dbConfig: DbConfig,
+    private val kinesisConfig: KinesisConfig
 ) {
+    val applicationName = "sample-kcl"
+    val leaseTableName = "sample-kcl-lease"
 
     // Kinesisデータの処理メソッド
     fun run() {
         val kinesisClient: KinesisAsyncClient = kinesisClientFactory.create()
         val dynamoDbAsyncClient: DynamoDbAsyncClient = dynamoDbClientFactory.create()
         val cloudWatchClient: CloudWatchAsyncClient = cloudWatchClientFactory.create()
-        val streamName = "study-kotlin-stream" // ストリーム名
         val workerIdentifier = UUID.randomUUID().toString()
+        val customStreamTracker = CustomStreamTracker(kinesisConfig)
 
         // データ処理のための設定を作成
         val configsBuilder = ConfigsBuilder(
-            streamName,
-            streamName,
+            customStreamTracker,
+            applicationName,
             kinesisClient,
             dynamoDbAsyncClient,
             cloudWatchClient,
@@ -47,15 +51,15 @@ class BackendApplication @Autowired constructor(
 
         // KCLがローカル環境（localstack）でEC2メタデータサービスにアクセスしようとしているが、必要ないため無効化
         val leaseManagementConfig = LeaseManagementConfig(
-            streamName,
-            streamName,
+            leaseTableName,
+            applicationName,
             dynamoDbAsyncClient,
             kinesisClient,
             workerIdentifier
         ).workerUtilizationAwareAssignmentConfig(
             LeaseManagementConfig.WorkerUtilizationAwareAssignmentConfig()
             .disableWorkerMetrics(true).workerMetricsTableConfig(
-            LeaseManagementConfig.WorkerMetricsTableConfig(streamName)
+            LeaseManagementConfig.WorkerMetricsTableConfig(applicationName)
         ))
 
         // スケジューラの設定と開始
@@ -69,7 +73,6 @@ class BackendApplication @Autowired constructor(
             configsBuilder.retrievalConfig()
         )
 
-        // 非同期に処理を開始
         val schedulerThread = Thread(scheduler)
         schedulerThread.isDaemon = true
         schedulerThread.start()
