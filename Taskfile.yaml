@@ -16,6 +16,11 @@ tasks:
     cmds:
       - docker compose up -d
 
+  watch:
+    desc: watch the container
+    cmds:
+      - docker compose up --watch --menu=false
+
   stop:
     desc: stop the container
     cmds:
