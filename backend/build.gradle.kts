@@ -23,7 +23,6 @@ dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-	implementation("com.amazonaws:amazon-kinesis-client:1.15.2")
 	implementation("software.amazon.kinesis:amazon-kinesis-client:3.0.1")
 	implementation("software.amazon.awssdk:kinesis:2.29.43")
 	implementation("software.amazon.awssdk:dynamodb:2.29.43")
