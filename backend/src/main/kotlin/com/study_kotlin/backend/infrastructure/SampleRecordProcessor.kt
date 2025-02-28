@@ -1,13 +1,19 @@
 package com.study_kotlin.backend.infrastructure
 
-import com.fasterxml.jackson.module.kotlin.*
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import com.study_kotlin.backend.infrastructure.db.DbConfig
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import software.amazon.kinesis.exceptions.InvalidStateException
+import software.amazon.kinesis.exceptions.KinesisClientLibRetryableException
 import software.amazon.kinesis.exceptions.ShutdownException
-import software.amazon.kinesis.lifecycle.events.*
+import software.amazon.kinesis.lifecycle.events.InitializationInput
+import software.amazon.kinesis.lifecycle.events.LeaseLostInput
+import software.amazon.kinesis.lifecycle.events.ProcessRecordsInput
+import software.amazon.kinesis.lifecycle.events.ShardEndedInput
+import software.amazon.kinesis.lifecycle.events.ShutdownRequestedInput
 import software.amazon.kinesis.processor.ShardRecordProcessor
 import java.sql.Connection
 import java.sql.DriverManager
@@ -52,8 +58,8 @@ class SampleRecordProcessor (private val dbConfig: DbConfig) : ShardRecordProces
 
             // record check point
             processRecordsInput.checkpointer().checkpoint()
-        } catch (t: Throwable) {
-            log.error("Caught throwable while processing records. Aborting.", t)
+        } catch (e: KinesisClientLibRetryableException) {
+            log.error("Caught throwable while processing records. Aborting.", e)
         } finally {
             MDC.remove(SHARD_ID_MDC_KEY)
         }
