@@ -18,7 +18,7 @@ $ git clone https://github.com/balista-yu/kotlin-kcl-sample.git
 2. Run docker compose
 ```
 $ cd kotlin-kcl-sample
-$ task watch
+$ task up
 ```
 
 3. DynamoDB Insert Record with localstack
