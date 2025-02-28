@@ -1,9 +1,9 @@
 plugins {
-    kotlin("jvm") version "1.9.25"
-    kotlin("plugin.spring") version "1.9.25"
+    kotlin("jvm") version "2.0.0"
+    kotlin("plugin.spring") version "2.0.0"
     id("org.springframework.boot") version "3.3.5"
     id("io.spring.dependency-management") version "1.1.6"
-    kotlin("plugin.jpa") version "1.9.25"
+    kotlin("plugin.jpa") version "2.0.0"
 }
 
 group = "com.study-kotlin"
@@ -31,6 +31,7 @@ dependencies {
 	implementation("software.amazon.awssdk:core:2.29.43")
 	implementation("software.amazon.awssdk:regions:2.29.43")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1")
 	implementation("org.slf4j:slf4j-api:2.1.0-alpha1")
 	runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
