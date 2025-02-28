@@ -30,8 +30,7 @@ class BackendApplication @Autowired constructor(
     val applicationName = "sample-kcl"
     val leaseTableName = "sample-kcl-lease"
 
-    // Kinesisデータの処理メソッド
-    fun run() {
+    fun createScheduler(): Scheduler {
         val kinesisClient: KinesisAsyncClient = kinesisClientFactory.create()
         val dynamoDbAsyncClient: DynamoDbAsyncClient = dynamoDbClientFactory.create()
         val cloudWatchClient: CloudWatchAsyncClient = cloudWatchClientFactory.create()
@@ -58,12 +57,12 @@ class BackendApplication @Autowired constructor(
             workerIdentifier
         ).workerUtilizationAwareAssignmentConfig(
             LeaseManagementConfig.WorkerUtilizationAwareAssignmentConfig()
-            .disableWorkerMetrics(true).workerMetricsTableConfig(
-            LeaseManagementConfig.WorkerMetricsTableConfig(applicationName)
-        ))
+                .disableWorkerMetrics(true).workerMetricsTableConfig(
+                    LeaseManagementConfig.WorkerMetricsTableConfig(applicationName)
+                ))
 
         // スケジューラの設定と開始
-        val scheduler = Scheduler(
+        return Scheduler(
             configsBuilder.checkpointConfig(),
             configsBuilder.coordinatorConfig(),
             leaseManagementConfig,
@@ -72,7 +71,12 @@ class BackendApplication @Autowired constructor(
             configsBuilder.processorConfig(),
             configsBuilder.retrievalConfig()
         )
+    }
 
+    // Kinesisデータの処理メソッド
+    fun run() {
+        // スケジューラの設定と開始
+        val scheduler = createScheduler()
         val schedulerThread = Thread(scheduler)
         schedulerThread.isDaemon = true
         schedulerThread.start()
