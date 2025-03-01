@@ -7,11 +7,6 @@ import com.study_kotlin.backend.infrastructure.aws.CloudWatchClientFactory
 import com.study_kotlin.backend.infrastructure.aws.KinesisConfig
 import com.study_kotlin.backend.infrastructure.db.DbConfig
 import jakarta.annotation.PreDestroy
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
 import org.springframework.beans.factory.annotation.Autowired
 import software.amazon.awssdk.services.cloudwatch.CloudWatchAsyncClient
 import software.amazon.awssdk.services.dynamodb.DynamoDbAsyncClient
@@ -21,6 +16,8 @@ import software.amazon.kinesis.coordinator.Scheduler
 import java.util.UUID
 import org.springframework.stereotype.Component
 import software.amazon.kinesis.leases.LeaseManagementConfig
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 @Component
 class KinesisConsumer @Autowired constructor(
@@ -32,7 +29,7 @@ class KinesisConsumer @Autowired constructor(
 ) {
     private val applicationName = "sample-kcl"
     private val leaseTableName = "sample-kcl-lease"
-    private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+    private val executorService: ExecutorService = Executors.newSingleThreadExecutor()
     private lateinit var scheduler: Scheduler
 
     init {
@@ -80,16 +77,14 @@ class KinesisConsumer @Autowired constructor(
             configsBuilder.processorConfig(),
             configsBuilder.retrievalConfig()
         )
-        scope.launch {
-            scheduler.run()
-        }
+        executorService.submit(scheduler)
     }
 
     @PreDestroy
     fun shutdown() {
         println("Shutting down Kinesis consumer...")
         scheduler.shutdown()
-        scope.cancel()
+        executorService.shutdown()
     }
 }
 

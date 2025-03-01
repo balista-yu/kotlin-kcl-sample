@@ -15,11 +15,6 @@ spring:
         format_sql: true
         globally_quoted_identifiers: true #予約済キーワードをエスケープするための構成
         globally_quoted_identifiers_skip_column_definitions: true
-  devtools:
-    restart:
-      enabled: true
-    livereload:
-      enabled: true
 postgres:
   url: ${POSTGRES_DATABASE_URL}
   username: ${POSTGRES_DATABASE_USER}
