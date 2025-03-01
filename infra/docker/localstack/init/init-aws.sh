@@ -21,6 +21,51 @@ awslocal dynamodb create-table \
     --no-deletion-protection-enabled \
     --stream-specification StreamEnabled=true,StreamViewType=NEW_IMAGE
 
+# @see https://github.com/localstack/localstack/issues/10000
+awslocal dynamodb create-table \
+    --table-name sample-kcl-lease \
+    --attribute-definitions \
+        AttributeName=leaseOwner,AttributeType=S \
+        AttributeName=leaseKey,AttributeType=S \
+    --key-schema \
+        AttributeName=leaseKey,KeyType=HASH \
+    --billing-mode=PAY_PER_REQUEST \
+    --global-secondary-indexes \
+        '[
+            {
+                "IndexName": "LeaseOwnerToLeaseKeyIndex",
+                "KeySchema": [
+                    {
+                        "AttributeName": "leaseOwner",
+                        "KeyType": "HASH"
+                    },
+                    {
+                        "AttributeName": "leaseKey",
+                        "KeyType": "RANGE"
+                    }
+                ],
+                "Projection": {
+                    "ProjectionType": "KEYS_ONLY"
+                }
+            }
+        ]'
+
+awslocal dynamodb create-table \
+    --table-name sample-kcl-WorkerMetricStats \
+    --attribute-definitions \
+        AttributeName=wid,AttributeType=S \
+    --key-schema \
+        AttributeName=wid,KeyType=HASH \
+    --billing-mode=PAY_PER_REQUEST
+
+awslocal dynamodb create-table \
+    --table-name sample-kcl-CoordinatorState \
+    --attribute-definitions \
+        AttributeName=key,AttributeType=S \
+    --key-schema \
+        AttributeName=key,KeyType=HASH \
+    --billing-mode=PAY_PER_REQUEST
+
 # create dynamodb test用
 awslocal dynamodb create-table \
     --table-name animals_test \
