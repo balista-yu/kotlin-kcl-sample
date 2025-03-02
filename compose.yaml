@@ -1,15 +1,15 @@
-name: 'study-kotlin'
+name: 'kotlin-kcl-sample'
 
 services:
-  backend:
-    container_name: study-kotlin-backend-container
-    hostname: study-kotlin-backend-server
-    image: study-kotlin/backend:dev
+  consumer-app:
+    container_name: kotlin-kcl-sample-consumer-app-container
+    hostname: kotlin-kcl-sample-consumer-app-server
+    image: kotlin-kcl-sample/consumer-app:dev
     build:
       context: .
-      dockerfile: ./infra/docker/backend/Dockerfile
+      dockerfile: ./infra/docker/consumer-app/Dockerfile
       cache_from:
-        - study-kotlin/backend:cache
+        - kotlin-kcl-sample/consumer-app:cache
       target: dev
     depends_on:
       - postgres
@@ -27,26 +27,26 @@ services:
     develop:
       watch:
         - action: sync
-          path: ./backend
+          path: ./consumer-app
           target: /app
         - action: rebuild
-          path: ./backend/build.gradle.kts
+          path: ./consumer-app/build.gradle.kts
     command: ["sh", "start.sh"]
 
   postgres:
-    container_name: study-kotlin-postgres-container
-    hostname: study-kotlin-postgres-server
-    image: study-kotlin/postgres:dev
+    container_name: kotlin-kcl-sample-postgres-container
+    hostname: kotlin-kcl-sample-postgres-server
+    image: kotlin-kcl-sample/postgres:dev
     build:
       context: .
       dockerfile: ./infra/docker/postgres/Dockerfile
       cache_from:
-        - study-kotlin/postgres:cache
+        - kotlin-kcl-sample/postgres:cache
     restart: always
     ports:
       - '15434:5432'
     environment:
-      - POSTGRES_DB=${POSTGRES_DB_NAME:-study_kotlin}
+      - POSTGRES_DB=${POSTGRES_DB_NAME:-kotlin_kcl_sample}
       - POSTGRES_USER=${POSTGRES_DB_USER:-test}
       - POSTGRES_PASSWORD=${POSTGRES_DB_PASS:-test}
       - TZ=Asia/Tokyo
@@ -56,21 +56,21 @@ services:
     networks:
       - default
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U test -D study_kotlin"]
+      test: ["CMD-SHELL", "pg_isready -U test -D kotlin_kcl_sample"]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 30s
 
   localstack:
-    container_name: study-kotlin-localstack-container
-    hostname: study-kotlin-localstack-server
-    image: study-kotlin/localstack:dev
+    container_name: kotlin-kcl-sample-localstack-container
+    hostname: kotlin-kcl-sample-localstack-server
+    image: kotlin-kcl-sample/localstack:dev
     build:
       context: .
       dockerfile: ./infra/docker/localstack/Dockerfile
       cache_from:
-        - study-kotlin/localstack:cache
+        - kotlin-kcl-sample/localstack:cache
     environment:
       - DEBUG=1
       - DOCKER_HOST=unix:///var/run/docker.sock
@@ -93,12 +93,12 @@ services:
 
 networks:
   default:
-    name: study-kotlin
+    name: kotlin-kcl-sample
 
 volumes:
   postgres-data-volume:
-    name: study-kotlin-postgres-data
+    name: kotlin-kcl-sample-postgres-data
     driver: local
   localstack-data-volume:
-    name: study-kotlin-localstack-data
+    name: kotlin-kcl-sample-localstack-data
     driver: local
