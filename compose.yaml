@@ -24,11 +24,10 @@ services:
       - default
     ports:
       - '8080:8080'
+    volumes:
+      - ./consumer-app:/app
     develop:
       watch:
-        - action: sync
-          path: ./consumer-app
-          target: /app
         - action: rebuild
           path: ./consumer-app/build.gradle.kts
     command: ["sh", "start.sh"]
