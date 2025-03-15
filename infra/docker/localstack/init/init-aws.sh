@@ -90,23 +90,19 @@ awslocal dynamodb create-table \
 # create kinesis stream
 awslocal kinesis create-stream \
     --stream-name animals-stream \
-    --shard-count 1 \
     --stream-mode-details '{"StreamMode": "ON_DEMAND"}'
 
 awslocal kinesis create-stream \
     --stream-name foods-stream \
-    --shard-count 1 \
     --stream-mode-details '{"StreamMode": "ON_DEMAND"}'
 
 # create kinesis stream test用
 awslocal kinesis create-stream \
     --stream-name animals-stream-test \
-    --shard-count 1 \
     --stream-mode-details '{"StreamMode": "ON_DEMAND"}'
 
 awslocal kinesis create-stream \
     --stream-name foods-stream-test \
-    --shard-count 1 \
     --stream-mode-details '{"StreamMode": "ON_DEMAND"}'
 
 # activate dynamodb kinesis data stream
