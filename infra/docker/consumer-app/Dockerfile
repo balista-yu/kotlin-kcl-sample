@@ -1,4 +1,4 @@
-FROM eclipse-temurin:25-jdk AS local
+FROM eclipse-temurin:21-jdk AS local
 
 WORKDIR /app
 
