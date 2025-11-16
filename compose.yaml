@@ -6,20 +6,15 @@ services:
     hostname: kotlin-kcl-sample-consumer-app-server
     image: kotlin-kcl-sample/consumer-app:dev
     build:
+      target: ${BUILD_TARGET:-local}
       context: .
       dockerfile: ./infra/docker/consumer-app/Dockerfile
       cache_from:
         - kotlin-kcl-sample/consumer-app:cache
-      target: dev
     depends_on:
       - postgres
     env_file:
       - app-local.env
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
     networks:
       - default
     ports:
