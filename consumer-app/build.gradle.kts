@@ -1,11 +1,11 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    kotlin("jvm") version "2.0.0"
-    kotlin("plugin.spring") version "2.0.0"
-    id("org.springframework.boot") version "3.3.5"
-    id("io.spring.dependency-management") version "1.1.6"
-    kotlin("plugin.jpa") version "2.0.0"
+    kotlin("jvm") version "2.2.21"
+    kotlin("plugin.spring") version "2.2.21"
+    id("org.springframework.boot") version "3.5.7"
+    id("io.spring.dependency-management") version "1.1.7"
+    kotlin("plugin.jpa") version "2.2.21"
 }
 
 group = "com.kotlin_kcl_sample"
@@ -26,25 +26,18 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("software.amazon.kinesis:amazon-kinesis-client:3.0.1")
-	implementation("software.amazon.awssdk:kinesis:2.29.43")
-	implementation("software.amazon.awssdk:dynamodb:2.29.43")
-	implementation("software.amazon.awssdk:cloudwatch:2.29.43")
-	implementation("software.amazon.awssdk:auth:2.29.43")
-	implementation("software.amazon.awssdk:core:2.29.43")
-	implementation("software.amazon.awssdk:regions:2.29.43")
+	implementation("software.amazon.awssdk:kinesis:2.38.6")
+	implementation("software.amazon.awssdk:dynamodb:2.38.6")
+	implementation("software.amazon.awssdk:cloudwatch:2.38.6")
+	implementation("software.amazon.awssdk:auth:2.38.6")
+	implementation("software.amazon.awssdk:core:2.38.6")
+	implementation("software.amazon.awssdk:regions:2.38.6")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-	implementation("org.slf4j:slf4j-api:2.1.0-alpha1")
 	runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.junit.jupiter:junit-jupiter")
-    testImplementation("org.mockito:mockito-core:5.15.2")
-    testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
-}
-
-kotlin {
-    jvmToolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
-    }
+    testImplementation("org.mockito:mockito-core:5.20.0")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:6.1.0")
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
