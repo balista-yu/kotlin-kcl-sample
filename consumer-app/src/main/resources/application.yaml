@@ -1,4 +1,9 @@
+server:
+  port: -1  # メインのWebサーバーを無効化
+
 spring:
+  application:
+    name: kotlin-kcl-sample-consumer
   datasource:
     driver-class-name: org.postgresql.Driver
     url: ${POSTGRES_DATABASE_URL}
@@ -17,6 +22,39 @@ spring:
         globally_quoted_identifiers_skip_column_definitions: true
   devtools:
     livereload:
+      enabled: true
+
+# Actuator & Monitoring設定
+management:
+  server:
+    port: 8081  # 管理用エンドポイント専用ポート
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+    prometheus:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+    tags:
+      application: ${spring.application.name}
+      environment: ${ENVIRONMENT:local}
+  # JVMメトリクスの有効化
+  health:
+    livenessState:
+      enabled: true
+    readinessState:
       enabled: true
 
 postgres:

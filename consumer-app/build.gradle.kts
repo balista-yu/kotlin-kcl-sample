@@ -23,6 +23,7 @@ repositories {
 
 dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools")
+    implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("software.amazon.kinesis:amazon-kinesis-client:3.0.1")
@@ -33,6 +34,11 @@ dependencies {
 	implementation("software.amazon.awssdk:core:2.38.6")
 	implementation("software.amazon.awssdk:regions:2.38.6")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+
+	// Monitoring & Observability
+	implementation("org.springframework.boot:spring-boot-starter-actuator")
+	implementation("io.micrometer:micrometer-registry-prometheus")
+
 	runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.junit.jupiter:junit-jupiter")
