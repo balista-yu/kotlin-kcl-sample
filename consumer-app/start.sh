@@ -1,3 +1,3 @@
 #!/bin/sh
-bash ./gradlew -t :bootJar &
+bash ./gradlew -t :classes &
 bash ./gradlew bootRun -PskipDownload=true

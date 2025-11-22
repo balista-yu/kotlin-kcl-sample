@@ -6,4 +6,4 @@
 # testing
 .devcontainer
 
-monitor.log
+.mcp.json

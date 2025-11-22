@@ -1,0 +1,12 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: "kotlin-kcl-sample-consumer"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ['consumer-app:8081']
+        labels:
+          service: 'kotlin-kcl-sample-consumer'
+          environment: 'local'

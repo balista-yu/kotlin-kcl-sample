@@ -6,24 +6,20 @@ services:
     hostname: kotlin-kcl-sample-consumer-app-server
     image: kotlin-kcl-sample/consumer-app:dev
     build:
+      target: ${BUILD_TARGET:-local}
       context: .
       dockerfile: ./infra/docker/consumer-app/Dockerfile
       cache_from:
         - kotlin-kcl-sample/consumer-app:cache
-      target: dev
     depends_on:
       - postgres
     env_file:
       - app-local.env
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
     networks:
       - default
     ports:
       - '8080:8080'
+      - '8081:8081'  # 管理用ポート
     volumes:
       - ./consumer-app:/app
     develop:
@@ -90,6 +86,40 @@ services:
         aliases:
           - localhost.localstack.cloud
 
+  prometheus:
+    container_name: kotlin-kcl-sample-prometheus-container
+    hostname: kotlin-kcl-sample-prometheus-server
+    image: kotlin-kcl-sample/prometheus:dev
+    build:
+      context: .
+      dockerfile: ./infra/docker/prometheus/Dockerfile
+      cache_from:
+        - kotlin-kcl-sample/prometheus:cache
+    ports:
+      - '19090:9090'
+    volumes:
+      - postgres-data-volume:/var/lib/postgresql/data
+      - ./infra/docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - default
+
+  grafana:
+    container_name: kotlin-kcl-sample-grafana-container
+    hostname: kotlin-kcl-sample-grafana-server
+    image: kotlin-kcl-sample/grafana:dev
+    build:
+      context: .
+      dockerfile: ./infra/docker/grafana/Dockerfile
+      cache_from:
+        - kotlin-kcl-sample/grafana:cache
+    ports:
+      - '13000:3000'
+    volumes:
+      - grafana-data-volume:/var/lib/grafana
+      - ./infra/docker/grafana/provisioning:/etc/grafana/provisioning
+    networks:
+      - default
+
 networks:
   default:
     name: kotlin-kcl-sample
@@ -100,4 +130,7 @@ volumes:
     driver: local
   localstack-data-volume:
     name: kotlin-kcl-sample-localstack-data
+    driver: local
+  grafana-data-volume:
+    name: kotlin-kcl-sample-grafana-data
     driver: local
